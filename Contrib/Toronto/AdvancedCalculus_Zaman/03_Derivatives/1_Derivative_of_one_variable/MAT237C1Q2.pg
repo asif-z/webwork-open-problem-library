@@ -16,85 +16,54 @@
 ## Section1('C1')
 ## Problem1('2')
 
-########################################################################
-
 DOCUMENT();
 
-loadMacros(
-"PGstandard.pl",
-"MathObjects.pl",
-"parserPopUp.pl",
-"PGgraders.pl",
-);
-
-TEXT(beginproblem());
+loadMacros('PGstandard.pl', 'PGML.pl', 'parserPopUp.pl', 'PGgraders.pl', 'PGcourse.pl');
 
 Context("Numeric");
-# 2.1
-$popup1 = PopUp(
-  ["?","Equivalent","Not equivalent"],
-  "Equivalent",
-);
-# 2.2
-$popup2 = PopUp(
-  ["?","Equivalent","Not equivalent"],
-  "Equivalent",
-);
-# 2.3
-$popup3 = PopUp(
-  ["?","Equivalent","Not equivalent"],
-  "Not equivalent",
-);
-# 2.4
-$popup4 = PopUp(
-  ["?","Equivalent","Not equivalent"],
-  "Not equivalent",
-);
-# 2.5
-$popup5 = PopUp(
-  ["?","Equivalent","Not equivalent"],
-  "Equivalent",
-);
 
-Context()->texStrings;
-BEGIN_TEXT
-Let \( f: \mathbb{R}\to\mathbb{R}^m \) and let \(a\in\mathbb{R}\). Which of the following are equivalent to "\(f\) is differentiable at \(a\)"?
-$BR
-$BR
-\{ $popup1->menu() \} (a) The limit \( lim_{h\to0}\frac{f(a+h)-f(a)}{h} \) exists.
-$BR
-\{ $popup2->menu() \} (b) There exists a linear map \( L: \mathbb{R}\to\mathbb{R}^m \) such that \( lim_{h\to0}\frac{f(a+h)-f(a)-L(h)}{h}=0 \).
-$BR
-\{ $popup3->menu() \} (c) There exists a linear map \( L: \mathbb{R}\to\mathbb{R}^m \) such that \( lim_{h\to0}\frac{f(a+h)-L(h)}{h}=0 \).
-$BR
-\{ $popup4->menu() \} (d) There exists a linear map \( L: \mathbb{R}\to\mathbb{R}^m \) such that \( \big|lim_{h\to0}\frac{f(a+h)f(a)-L(h)}{h}\big|=0 \).
-$BR
-\{ $popup4->menu() \} (d) There exists a linear map \( L: \mathbb{R}\to\mathbb{R}^m \) such that \( \big|\big|lim_{h\to0}\frac{f(a+h)f(a)-L(h)}{h}\big|\big|=0 \).
-END_TEXT
-Context()->normalStrings;
+$dd_opts = ['Equivalent', 'Not equivalent'];
+
+$dd1 = DropDown($dd_opts,0);
+$dd2 = DropDown($dd_opts,0);
+$dd3 = DropDown($dd_opts,1);
+$dd4 = DropDown($dd_opts,1);
+$dd5 = DropDown($dd_opts,0);
 
 $showPartialCorrectAnswers = 0;
 
-#
 #  Incremental grader
-#
+
 install_problem_grader(~~&custom_problem_grader_fluid);
 $ENV{'grader_numright'} = [1,2,3,4,5];
 $ENV{'grader_scores'} = [0.2,0.4,0.6,0.8,1];
 $ENV{'grader_message'} = "You can earn partial credits.";
 
-ANS( $popup1->cmp() );
-ANS( $popup2->cmp() );
-ANS( $popup3->cmp() );
-ANS( $popup4->cmp() );
-ANS( $popup5->cmp() );
 
-Context()->texStrings;
-BEGIN_SOLUTION
-${PAR}SOLUTION:$PAR
-The correct answer is \{ $popup1->correct_ans() \}
-END_SOLUTION
-Context()->normalStrings;
+BEGIN_PGML
+Let [` f: \mathbb{R}\to\mathbb{R}^m `] and let [`a\in\mathbb{R}`]. Which of the following are equivalent to "[`f`] is differentiable at [`a`]"?
+  
+a) [_]{$dd1} The limit [`` \lim_{h\to0}\frac{f(a+h)-f(a)}{h} ``] exists.
+  
+b) [_]{$dd2} There exists a linear map [`` L: \mathbb{R}\to\mathbb{R}^m ``] such that [`` \lim_{h\to0}\frac{f(a+h)-f(a)-L(h)}{h}=0 ``].
+  
+c) [_]{$dd3} There exists a linear map [`` L: \mathbb{R}\to\mathbb{R}^m ``] such that [`` \lim_{h\to0}\frac{f(a+h)-L(h)}{h}=0 ``].
+  
+d) [_]{$dd4} There exists a linear map [`` L: \mathbb{R}\to\mathbb{R}^m ``] such that [`` \big|\lim_{h\to0}\frac{f(a+h)f(a)-L(h)}{h}\big|=0 ``].
+  
+d) [_]{$dd5} There exists a linear map [`` L: \mathbb{R}\to\mathbb{R}^m ``] such that [`` \big|\big|\lim_{h\to0}\frac{f(a+h)f(a)-L(h)}{h}\big|\big|=0 ``].
+END_PGML
+
+
+BEGIN_PGML_SOLUTION
+
+a) [$dd1]
+b) [$dd2]
+c) [$dd3]
+d) [$dd4]
+e) [$dd5]
+
+END_PGML_SOLUTION
 
 COMMENT('MathObject version.');
 
