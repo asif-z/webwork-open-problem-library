@@ -16,111 +16,59 @@
 ## Section1('A2')
 ## Problem1('3')
 
-########################################################################
-
 DOCUMENT();
 
 loadMacros(
-  "PGstandard.pl",
-  "PGchoicemacros.pl",
-  "unionTables.pl",
-  "LiveGraphics3D.pl",
-  "PGgraders.pl",
-  "PGcourse.pl"
+    'PGstandard.pl', 'PGML.pl', 'parserPopUp.pl', 'PGgraders.pl',
+    'PGcourse.pl'
 );
 
-TEXT(beginproblem());
-
-$refreshCachedImages=1;
-
-###################################################
-#  Setup
-
-$width  = 200;
-$height = 200;
-$lsize = [$width,$height];  # the size of the Live3D images
-$ltsize = 220;       # tex size of the Live3D images
-
-
-@surfaces = (
-image("a2-surface1.png",width=>$width,height=>$height,tex_size=>$ltsize), 
-image("a2-surface2.png",width=>$width,height=>$height,tex_size=>$ltsize),
-image("a2-surface3.png",width=>$width,height=>$height,tex_size=>$ltsize), 
-image("a2-surface4.png",width=>$width,height=>$height,tex_size=>$ltsize), 
+@surf = (
+    'a2-surface1.png', 'a2-surface2.png',
+    'a2-surface3.png', 'a2-surface4.png'
+);
+@cont = (
+    'a2-contour1.png', 'a2-contour2.png',
+    'a2-contour3.png', 'a2-contour4.png'
 );
 
-@contours = (
-image("a2-contour4.png",width=>$width,height=>$height,tex_size=>$ltsize),
-image("a2-contour3.png",width=>$width,height=>$height,tex_size=>$ltsize),
-image("a2-contour1.png",width=>$width,height=>$height,tex_size=>$ltsize),
-image("a2-contour2.png",width=>$width,height=>$height,tex_size=>$ltsize),
-);
+@shuffle = random_subset(4, 0 .. 3);
+@inv[@shuffle] = 0 .. 3;                     # define the inverse
 
-@perm = shuffle(4);
-@inv = invert(@perm);
-
-
-###############################################
-#  Main text
-
-BEGIN_TEXT
-A contour plot for a function \( f: \mathbb{R}^2\to\mathbb{R} \) is a finite collection of level sets plotted on a single plane. Match the contour plot to the graph of the function.
-$BR
-$BR
-$BCENTER
-\{
-BeginTable().
-
-AlignedRow([ 
- $surfaces[0], 
- $surfaces[1], 
- $surfaces[2], 
- $surfaces[3] 
-]).
-
-TableSpace(5,0).
-
-AlignedRow([ 
- "1. ".pop_up_list(["Choose","A","B","C","D"]),
- "2. ".pop_up_list(["Choose","A","B","C","D"]),
- "3. ".pop_up_list(["Choose","A","B","C","D"]),
- "4. ".pop_up_list(["Choose","A","B","C","D"])
-]).
-
-TableSpace(26,5).
-
-AlignedRow([
-$contours[$perm[0]],
-$contours[$perm[1]],
-$contours[$perm[2]],
-$contours[$perm[3]]
-]).
-
-TableSpace(5,0).
-
-AlignedRow(["A","B","C","D"]).
-
-EndTable();
-\}
-$BR
-(Click on a graph to enlarge it.)
-$ECENTER
-END_TEXT
-
-
-##########################################
-#  Answer evaluation
+@dd = map { DropDown([ 'A' .. 'D' ], $_) } (0 .. 3);
 
 install_problem_grader(~~&custom_problem_grader_fluid);
-$ENV{'grader_numright'} = [2,4];
-$ENV{'grader_scores'} = [0.5,1];
-$ENV{'grader_message'} = "You can earn " .
-"50% partial credit for 2 - 3 correct answers.";
+$ENV{'grader_numright'} = [ 2,   4 ];
+$ENV{'grader_scores'}   = [ 0.5, 1 ];
+$ENV{'grader_message'} =
+    "You can earn " . "50% partial credit for 2 - 3 correct answers.";
 
 $showPartialCorrectAnswers = 0;
 
-ANS(str_cmp([@ALPHABET[@inv]]));
+BEGIN_PGML
+A contour plot for a function [` f: \mathbb{R}^2\to\mathbb{R} `] is a finite collection of level sets plotted on a single plane. Match the contour plot to the graph of the function.
 
+[#
+    [.[!!]{$surf[0]}{200}.][.[!!]{$surf[1]}{200}.]
+    [.[!!]{$surf[2]}{200}.] [.[!!]{$surf[3]}{200}.]*
+    [. [_]{$dd[$inv[0]]} .][. [_]{$dd[$inv[1]]} .]
+    [. [_]{$dd[$inv[2]]} .][. [_]{$dd[$inv[3]]} .]*
+    [.[!!]{$cont[$shuffle[0]]} .][.[!!]{$cont[$shuffle[1]]} .]
+    [.[!!]{$cont[$shuffle[2]]} .][.[!!]{$cont[$shuffle[3]]} .]*
+    [. *A* .][. *B* .] [. *C* .] [. *D* .]*
+#]
+
+
+END_PGML
+
+BEGIN_PGML_SOLUTION
+If you can imagine slices through the surface plots, then you will see the contour plots.  In this case
+
+1) Surface plot corresponds to Contour plot [$dd[$shuffle[0]]].
+2) Surface plot corresponds to Contour plot [$dd[$shuffle[1]]].
+3) Surface plot corresponds to Contour plot [$dd[$shuffle[2]]].
+4) Surface plot corresponds to Contour plot [$dd[$shuffle[3]]].
+END_PGML_SOLUTION
 COMMENT("Uses static graphs");
 
 ENDDOCUMENT();

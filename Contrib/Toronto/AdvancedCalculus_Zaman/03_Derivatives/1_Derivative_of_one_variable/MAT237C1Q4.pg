@@ -16,60 +16,38 @@
 ## Section1('C1')
 ## Problem1('4')
 
-########################################################################
+DOCUMENT();
 
-DOCUMENT(); 
+loadMacros('PGstandard.pl', 'PGML.pl', 'parserVectorUtils.pl', 'PGcourse.pl');
 
-loadMacros(
-"PGstandard.pl",
-"MathObjects.pl",
-"parserVectorUtils.pl",
-"unionLists.pl",
-);
+Context("Vector")->variables->are(t => 'Real');
 
-TEXT(beginproblem());
+$g  = Compute("<t cos(t), t sin(t), t>");
+$dg = $g->D('t');
 
-Context("Numeric");
+$pos     = $g->eval(t => Compute("2 pi"));
+$vel     = $dg->eval(t => Compute("2 pi"));
+$tangent = $vel->unit;
 
-$tpi = 2*Real("pi");
-$unit_1 = 1/sqrt(2+4*Real("pi")**2);
-$unit_2pi = 2*Real("pi")/sqrt(2+4*Real("pi")**2);
+BEGIN_PGML
+Let [` g: \mathbb{R}\to\mathbb{R}^3 `] be given by [` g(t)=(t\cos t, t\sin t, t) `].
 
-Context()->texStrings;
-BEGIN_TEXT
-Let \( g: \mathbb{R}\to\mathbb{R}^3 \) be given by \( g(t)=(t\cos t, t\sin t, t) \).
-\{ BeginList('OL', type=>'A') \}
+a) Compute the postion at [`2\pi`]. [_]{$pos}
 
-$ITEM Compute the derivative of \(g\) at \(2\pi\).
-(\{ ans_rule(5) \}, \{ ans_rule(5) \}, \{ ans_rule(5) \})
+b) Compute the velocity of [`g`] at [`2\pi`].  [_]{$vel}
 
-$ITEMSEP
-$ITEM Compute the velocity of \(g\) at \(2\pi\).
-(\{ ans_rule(5) \}, \{ ans_rule(5) \}, \{ ans_rule(5) \})
+c) Compute the unit tangent vector of [`g`] at [`2\pi`].  [_]{$tangent}
 
-$ITEMSEP
-$ITEM Compute the unit tangent vector of \(g\) at \(2\pi\).
-(\{ ans_rule(5) \}, \{ ans_rule(5) \}, \{ ans_rule(5) \})
+END_PGML
 
-\{ EndList('OL') \}
-END_TEXT
-Context()->normalStrings;
+BEGIN_PGML_SOLUTION
+a) For this, evaluate [`g`] at [`t=2\pi`] or  [`[$pos]`].
 
-$showPartialCorrectAnswers = 0;
+b) We first need the derivative.  This is 
+[``` g'(t) = [$dg]```]
+and then evaluate it at [`t=2\pi`] or [`g'(2\pi) = [$vel] `]. 
 
-ANS( num_cmp(1) );
-ANS( $tpi->with(tolerance=>.0001)->cmp );
-ANS( num_cmp(1) );
-ANS( num_cmp(1) );
-ANS( $tpi->with(tolerance=>.0001)->cmp );
-ANS( num_cmp(1) );
-ANS( $unit_1->with(tolerance=>.0001)->cmp );
-ANS( $unit_2pi->with(tolerance=>.0001)->cmp );
-ANS( $unit_1->with(tolerance=>.0001)->cmp );
-
-Context()->texStrings;
-Context()->normalStrings;
-
-COMMENT('MathObject version.');
+c) For this, divide through by the length of the vector in b) this is [`[$tangent]`].
+END_PGML_SOLUTION
 
 ENDDOCUMENT();

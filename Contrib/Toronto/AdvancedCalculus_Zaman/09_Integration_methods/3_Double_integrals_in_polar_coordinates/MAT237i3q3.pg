@@ -1,5 +1,5 @@
 ##DESCRIPTION
-##  Algebra problem: true or false for inequality 
+##  Algebra problem: true or false for inequality
 ##ENDDESCRIPTION
 
 ##KEYWORDS('algebra', 'inequality', 'fraction')
@@ -16,95 +16,89 @@
 ## Section1('1.1')
 ## Problem1('22')
 
-########################################################################
-
-DOCUMENT();  
+DOCUMENT();
 
 loadMacros(
-"PGstandard.pl",
-"PGchoicemacros.pl",
+    'PGstandard.pl', 'PGML.pl', 'parserPopUp.pl', 'plots.pl',
+    'PGcourse.pl'
 );
 
-##############################################################
-#
-#  Setup
-#
-$mc1 = new_multiple_choice();
-$mc1->qa(
-"Match this plot to one of the equations above", 
-"C"
+$plot[0] = Plot(
+    xmin        => -2.5,
+    xmax        =>  2.5,
+    xtick_delta =>  1,
+    xminor      =>  1,
+    ymin        => -2.5,
+    ymax        =>  2.5,
+    ytick_delta =>  1,
+    yminor      =>  1,
 );
-$mc1->makeLast("A", "B", "C", "D", "E", "F");
+$plot[0]->add_function([ '(1+cos(2t))*cos(t)', '(1+cos(2t))*sin(t)' ],
+    't', 0, '2pi', color => 'darkred');
 
-$mc2 = new_multiple_choice();
-$mc2->qa(
-"Match this plot to one of the equations above", 
-"F"
+$plot[1] = Plot(
+    xmin        => -20,
+    xmax        =>  20,
+    xtick_delta =>  5,
+    xminor      =>  4,
+    ymin        => -20,
+    ymax        =>  20,
+    ytick_delta =>  5,
+    yminor      =>  4,
 );
-$mc2->makeLast("A", "B", "C", "D", "E", "F");
-
-$mc3 = new_multiple_choice();
-$mc3->qa(
-"Match this plot to one of the equations above", 
-"A"
+$plot[1]
+    ->add_function([ 't*cos(t)', 't*sin(t)' ], 't', 0, 30, color => 'darkred');
+$plot[2] = Plot(
+    xmin        => -0.5,
+    xmax        =>  3.5,
+    xtick_delta =>  1,
+    xminor      =>  1,
+    ymin        => -2.5,
+    ymax        =>  2.5,
+    ytick_delta =>  1,
+    yminor      =>  1,
 );
-$mc3->makeLast("A", "B", "C", "D", "E", "F");
+$plot[2]->add_function([ '(1+2cos(t))*cos(t)', '(1+2cos(t))*sin(t)' ],
+    't', 0, '2pi', color => 'darkred');
 
-$mc4 = new_multiple_choice();
-$mc4->qa(
-"Match this plot to one of the equations above", 
-"E"
+$plot[3] = Plot(
+    xmin        => -1.5,
+    xmax        =>  1.5,
+    xtick_delta =>  1,
+    xminor      =>  1,
+    ymin        => -1.5,
+    ymax        =>  1.5,
+    ytick_delta =>  1,
+    yminor      =>  1,
 );
-$mc4->makeLast("A", "B", "C", "D", "E", "F");
+$plot[3]->add_function([ 'sin(3t)*cos(t)', 'sin(3t)*sin(t)' ],
+    't', 0, '2pi', color => 'darkred');
 
-##############################################################
-#
-#  Text
-#
-#
-
-BEGIN_TEXT
-Here is a list of six equations in polar coordinates.
-\[ (A) \ r = \theta, \theta > 0 \ \ \ (B) \ r = \theta, \theta < 0  \ \ \ (C) \ r = 1 + cos(2 \theta) \\
-(D) \ r = cos(3 \theta) \ \ \ (E) \ r = sin(3 \theta) \ \ \ \ (F) \ r = 1 + 2 cos(\theta) \] $BR 
-$BR
-\{ $mc1->print_q() \}
-$BR
-\{ image( "i3-loop-two.png", width=>300, height=>300) \}
-$BR
-\{ $mc1->print_a() \}
-
-$BR
-\{ $mc2->print_q() \}
-$BR
-\{ image( "i3-spiral.png", width=>300, height=>300 ) \}
-$BR
-\{ $mc2->print_a() \}
-
-$BR
-\{ $mc3->print_q() \}
-$BR
-\{ image( "i3-cardiod.png", width=>300, height=>300 ) \}
-$BR
-\{ $mc3->print_a() \}
-
-$BR
-\{ $mc4->print_q() \}
-$BR
-\{ image( "i3-loop-three.png", width=>300, height=>300 ) \}
-$BR
-\{ $mc4->print_a() \}
-END_TEXT
-
-##############################################################
-#
-#  Answers
+@dd = map { DropDown([ 'A' .. 'F' ], $_) } (2, 0, 5, 4);
 
 $showPartialCorrectAnswers = 0;
 
-ANS( radio_cmp( $mc1->correct_ans() ) );
-ANS( radio_cmp( $mc2->correct_ans() ) );
-ANS( radio_cmp( $mc3->correct_ans() ) );
-ANS( radio_cmp( $mc4->correct_ans() ) );
+BEGIN_PGML
+Here is a list of six equations in polar coordinates.
 
-ENDDOCUMENT();       
+[#
+    [. *A* .] [. [`r=\theta, \; \theta > 0 `] .]
+    [. *B* .] [. [`r=\theta, \; \theta < 0 `] .]
+    [. *C* .] [. [`r= 1+ \cos(2\theta)`] .]*
+    [. *D* .] [. [`r=\cos(3\theta) `] .]
+    [. *E* .] [. [`r=\sin(3\theta) `] .]
+    [. *F* .] [. [`r=1+2 \cos(\theta)`] .]*
+    #]{padding => [0.25,0.75]}
+
+For each plot, match to the corresponding polar equation: 
+
+[#
+    [.[!!]{$plot[0]}{200}.][.[!!]{$plot[1]}{200}.]*
+    [. [_]{$dd[0]} .][. [_]{$dd[1]} .]*
+    [.[!!]{$plot[2]}{200}.][.[!!]{$plot[3]}{200}.]*
+    [. [_]{$dd[2]} .][. [_]{$dd[3]} .]*
+#]{padding => [0.25, 0.75]}
+
+END_PGML
+
+ENDDOCUMENT();

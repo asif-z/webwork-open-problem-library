@@ -16,66 +16,32 @@
 ## Section1('A2')
 ## Problem1('5.1-5.2')
 
-########################################################################
+DOCUMENT();
 
-DOCUMENT();	
-
-loadMacros(
-  "PGstandard.pl",
-  "PGchoicemacros.pl",
-  "PGgraphmacros.pl",
-  "MathObjects.pl",
-  "weightedGrader.pl",
-  "PGcourse.pl",
-  "parserPopUp.pl",
-);
-
-TEXT(beginproblem());
-
-#######################################
+loadMacros('PGstandard.pl', 'PGML.pl', 'parserPopUp.pl', 'PGcourse.pl');
 
 Context("Numeric");
 
-$popup = PopUp(
-  ["?","A","B","C","D","E"],
-  "E",
-);
-
-################################################
-
-Context()->texStrings;
-BEGIN_TEXT
-A topographic map of the island of Hawaii is below. The contour plot values are measured in feet.
-$PAR
-$BCENTER
-\{ image( "a2-hawaii.png", width=>250, height=>300, tex_size=>300, extra_html_tags=>'alt="hawaii"' ) \}
-$ECENTER
-Let \(h: \mathbb{R}^2\to\mathbb{R}\) be a function describing the height of the island at a point.
-$BR
-$BR
-(a) On which level set of \(h\) does the point \(A\) belong? \{ans_rule(10)\} 
-END_TEXT
-ANS(num_cmp(1000));
-BEGIN_TEXT
-$BR
-$BR
-(b) Among the points \(A,B,C,D,E\), which point is the 3rd highest?\{ $popup->menu() \}
-END_TEXT
-Context()->normalStrings;
-
-install_problem_grader(~~&std_problem_grader);
+$dd = DropDown([ "A", "B", "C", "D", "E" ], "E");
 
 $showPartialCorrectAnswers = 0;
 
-ANS( $popup->cmp() );
+BEGIN_PGML
+A topographic map of the island of Hawaii is below. The contour plot values are measured in feet.
 
-Context()->texStrings;
-BEGIN_SOLUTION
-${PAR}SOLUTION:$PAR
-The correct answer is \{ $popup->correct_ans() \}
-END_SOLUTION
-Context()->normalStrings;
+>>[!A map of Hawaii with contour lines.!]{'a2-hawaii.png'}{250}<<
 
-COMMENT('MathObject version.');
+Let [`h: \mathbb{R}^2\to\mathbb{R}`] be a function describing the height of the island at a point.
+
+a) On which level set of [`h`] does the point [`A`] belong? [_]{Real(1000)}
+
+b) Among the points [`A,B,C,D,E`], which point is the 3rd highest? [_]{$dd}
+END_PGML
+
+BEGIN_PGML_SOLUTION
+a) 1000
+
+b) The correct answer is [$dd].
+END_PGML_SOLUTION
 
 ENDDOCUMENT();
